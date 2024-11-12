@@ -28,7 +28,7 @@ class UserActivities:
     subsegment = xray_recorder.begin_subsegment('mock-data')
     # xray ----
     dict = {
-      "now": now.isformat()
+      "now": now.isformat(),
       "results-size": len(model['data'])
     }
     subsegment.put_metadata('key', dict, 'namespace')
