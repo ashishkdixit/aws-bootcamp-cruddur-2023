@@ -3,7 +3,13 @@ import {ReactComponent as ElipsesIcon} from './svg/elipses.svg';
 import React from "react";
 
 // [TODO] Authenication
-import { Auth } from 'aws-amplify';
+import { defineAuth } from "@aws-amplify/backend"
+
+export const auth = defineAuth({
+  loginWith: {
+    email: true,
+  },
+})
 
 export default function ProfileInfo(props) {
   const [popped, setPopped] = React.useState(false);
