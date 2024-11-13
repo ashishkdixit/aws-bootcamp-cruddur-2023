@@ -12,7 +12,11 @@
 			"extensions": [
 				"ms-azuretools.vscode-docker",
 				"ms-python.python"
-			]
+			],
+            "settings": {
+                "workbench.colorTheme": "Default Dark+", // Set the dark theme
+                "workbench.iconTheme": "vscode-icons" // Optional icon theme for better visibility
+            }
 		}
 	}
 
