@@ -11,23 +11,24 @@ import MessageGroupPage from './pages/MessageGroupPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import React from 'react';
 import process from 'process';
-import {
-  createBrowserRouter,
-  RouterProvider
-} from "react-router-dom";
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Amplify } from 'aws-amplify';
 
-// Configure Amplify with environment variables
+
+
 Amplify.configure({
+  "aws_project_region": process.env.REACT_APP_AWS_PROJECT_REGION,
+  "aws_user_pools_id": process.env.REACT_APP_AWS_USER_POOLS_ID,
+  "aws_user_pools_web_client_id": process.env.REACT_APP_CLIENT_ID,
+  "oauth": {},
   Auth: {
-    region: process.env.REACT_APP_AWS_PROJECT_REGION, // REQUIRED - Amazon Cognito Region
-    userPoolId: process.env.REACT_APP_AWS_USER_POOLS_ID, // REQUIRED - Cognito User Pool ID
-    userPoolWebClientId: process.env.REACT_APP_CLIENT_ID, // REQUIRED - Web Client ID for the User Pool
-  },
-  // Optional OAuth settings if needed for social logins
-  oauth: {}
+    region: process.env.REACT_APP_AWS_PROJECT_REGION,
+    userPoolId: process.env.REACT_APP_AWS_USER_POOLS_ID,
+    userPoolWebClientId: process.env.REACT_APP_CLIENT_ID,
+  }
 });
+
+
 
 const router = createBrowserRouter([
   { path: "/", element: <HomeFeedPage /> },
