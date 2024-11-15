@@ -7,7 +7,7 @@ import ActivityForm from '../components/ActivityForm';
 import ReplyForm from '../components/ReplyForm';
 
 // Import specific functions from Amplify Auth module
-import { getCurrentUser } from '@aws-amplify/auth';
+import { fetchAuthSession,getCurrentUser } from '@aws-amplify/auth';
 
 export default function HomeFeedPage() {
   const [activities, setActivities] = React.useState([]);
@@ -33,17 +33,34 @@ export default function HomeFeedPage() {
   };
 
   // Authentication check function
+  // const checkAuth = async () => {
+  //   try {
+  //     const cognitoUser = await getCurrentUser({ bypassCache: false });
+  //     const {tokens: session} = await fetchAuthSession();
+  //     setUser({
+  //       display_name: cognitoUser.attributes.name,
+  //       handle: cognitoUser.attributes.preferred_username,
+  //     });
+  //   } catch (err) {
+  //     console.log("Error checking authentication:", err);
+  //   }
+  // };
   const checkAuth = async () => {
-    try {
-      const cognitoUser = await getCurrentUser({ bypassCache: false });
-      setUser({
-        display_name: cognitoUser.attributes.name,
-        handle: cognitoUser.attributes.preferred_username,
-      });
-    } catch (err) {
-      console.log("Error checking authentication:", err);
-    }
+    getCurrentUser({
+      bypassCache: false 
+    })
+    .then((user) => {
+      console.log('user',user);
+      return getCurrentUser()
+    }).then((cognito_user) => {
+        setUser({
+          display_name: cognito_user.attributes.name,
+          handle: cognito_user.attributes.preferred_username
+        })
+    })
+    .catch((err) => console.log(err));
   };
+  
 
   React.useEffect(() => {
     loadData();

@@ -12,22 +12,41 @@ export default function SigninPage() {
   const [errors, setErrors] = React.useState('');
 
   const onsubmit = async (event) => {
-    setErrors('');
+    setErrors('')
     event.preventDefault();
-
     try {
-      const user = await signIn(email, password); // Use signIn directly
-      localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken);
-      window.location.href = "/";
+      signIn(email, password)
+        .then(user => {
+          localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
+          window.location.href = "/"
+        })
+        .catch(err => { console.log('Error!', err) });
     } catch (error) {
-      if (error.code === 'UserNotConfirmedException') {
-        window.location.href = "/confirm";
-      } else {
-        setErrors(error.message);
+      if (error.code == 'UserNotConfirmedException') {
+        window.location.href = "/confirm"
       }
+      setErrors(error.message)
     }
-    return false;
-  };
+    return false
+  }
+
+  // const onsubmit = async (event) => {
+  //   setErrors('');
+  //   event.preventDefault();
+
+  //   try {
+  //     const user = await signIn(email, password); // Use signIn directly
+  //     localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken);
+  //     window.location.href = "/";
+  //   } catch (error) {
+  //     if (error.code === 'UserNotConfirmedException') {
+  //       window.location.href = "/confirm";
+  //     } else {
+  //       setErrors(error.message);
+  //     }
+  //   }
+  //   return false;
+  // };
 
   const email_onchange = (event) => {
     setEmail(event.target.value);
