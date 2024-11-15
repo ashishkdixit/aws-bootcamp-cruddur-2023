@@ -22,12 +22,25 @@ export default function SigninPage() {
         password: password
       });
 
-      // Store session token in local storage
+      console.log("User signed in:", user);
+
+      // Fetch session to get tokens
       const session = await fetchAuthSession();
-      const accessToken = session.getAccessToken().getJwtToken();
-      console.log(accessToken)
+      console.log("Session Object:", session);
+
+      // Ensure session is valid
+      if (!session || !session.getAccessToken) {
+        throw new Error("Invalid session.");
+      }
+
+      // Get access token
+      // const accessToken = session.getAccessToken().getJwtToken();
+      const accessToken = session.tokens.accessToken();
+      console.log("Access Token:", accessToken);
+
+      // Store token locally
       localStorage.setItem("access_token", accessToken);
-      
+
       // Redirect to home page after successful sign-in
       window.location.href = "/";
     } catch (error) {

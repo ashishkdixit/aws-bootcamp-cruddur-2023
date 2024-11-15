@@ -7,7 +7,7 @@ import ActivityForm from '../components/ActivityForm';
 import ReplyForm from '../components/ReplyForm';
 
 // Import specific functions from Amplify Auth module
-import { fetchAuthSession,getCurrentUser } from '@aws-amplify/auth';
+import { fetchAuthSession, getCurrentUser } from '@aws-amplify/auth';
 
 export default function HomeFeedPage() {
   const [activities, setActivities] = React.useState([]);
@@ -16,10 +16,10 @@ export default function HomeFeedPage() {
   const [replyActivity, setReplyActivity] = React.useState({});
   const [user, setUser] = React.useState(null);
   const dataFetchedRef = React.useRef(false);
-  
+
   const loadData = async () => {
     try {
-      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/home`
+      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/home`;
       const res = await fetch(backend_url, { method: "GET" });
       let resJson = await res.json();
       if (res.status === 200) {
@@ -32,61 +32,42 @@ export default function HomeFeedPage() {
     }
   };
 
-  // const checkAuth = async () => {
-  //   try {
-  //     // Retrieve user details
-  //     const user = await getCurrentUser({ bypassCache: false });
-
-  //     // Verify session validity
-  //     await fetchAuthSession();
-      
-  //     // Check if session is valid by calling fetchAuthSession()
-  //     // const session = await fetchAuthSession();
-  //     // localStorage.setItem("access_token", session.tokens.accessToken);
-  
-  //     // If successful, set user state
-  //     setUser({
-  //       display_name: user.attributes.name,
-  //       handle: user.attributes.preferred_username,
-  //     });
-  //   } catch (err) {
-  //     console.log("Error checking authentication:", err);
-  //   }
-  // };
   const checkAuth = async () => {
     try {
-      // Retrieve user details, ensuring the session is valid before setting user data
+      // Retrieve user details
       const user = await getCurrentUser({ bypassCache: false });
-  
-      // Check for a valid session; this will error if the session is invalid
+      console.log("User details:", user);
+
+      // Fetch session
       const session = await fetchAuthSession();
-      const accessToken = session.getAccessToken().getJwtToken();
-      console.log(accessToken)
+      console.log("Session Object:", session);
+
+      // Ensure session is valid
+      if (!session || !session.getAccessToken) {
+        throw new Error("Invalid session.");
+      }
+
+      // Get access token
+      // const accessToken = session.getAccessToken().getJwtToken();
+      const accessToken = session.tokens.accessToken();
+      console.log("Access Token:", accessToken);
+
+      // Store token locally
       localStorage.setItem("access_token", accessToken);
-  
-      // If session is valid, set user state
+
+      // Set user state
       setUser({
         display_name: user.attributes.name,
         handle: user.attributes.preferred_username,
       });
-  
+
       console.log("Session is valid. User authenticated.");
     } catch (err) {
       console.log("Error checking authentication:", err.message);
     }
   };
-  
- 
 
   React.useEffect(() => {
-    loadData();
-    checkAuth();
-  }, []);
-
-  React.useEffect(() => {
-    if (dataFetchedRef.current) return;
-    dataFetchedRef.current = true;
-
     loadData();
     checkAuth();
   }, []);
