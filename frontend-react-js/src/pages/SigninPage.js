@@ -2,51 +2,43 @@ import './SigninPage.css';
 import React from "react";
 import { ReactComponent as Logo } from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
-// Importing only the signIn method from @aws-amplify/auth
-import { signIn } from '@aws-amplify/auth';
+
+// Updated imports for Amplify v6
+import { signIn, fetchAuthSession } from '@aws-amplify/auth';
 
 export default function SigninPage() {
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState('');
 
   const onsubmit = async (event) => {
-    setErrors('')
+    setErrors('');
     event.preventDefault();
+
     try {
-      signIn(email, password)
-        .then(user => {
-          localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
-          window.location.href = "/"
-        })
-        .catch(err => { console.log('Error!', err) });
+      // Use the `signIn` API method for authentication
+      const user = await signIn({
+        username: email,
+        password: password
+      });
+
+      // Store session token in local storage
+      const session = await fetchAuthSession();
+      const accessToken = session.getAccessToken().getJwtToken();
+      console.log(accessToken)
+      localStorage.setItem("access_token", accessToken);
+      
+      // Redirect to home page after successful sign-in
+      window.location.href = "/";
     } catch (error) {
-      if (error.code == 'UserNotConfirmedException') {
-        window.location.href = "/confirm"
+      // Handle unconfirmed users
+      if (error.code === 'UserNotConfirmedException') {
+        window.location.href = "/confirm";
+      } else {
+        setErrors(error.message || "An error occurred. Please try again.");
       }
-      setErrors(error.message)
     }
-    return false
-  }
-
-  // const onsubmit = async (event) => {
-  //   setErrors('');
-  //   event.preventDefault();
-
-  //   try {
-  //     const user = await signIn(email, password); // Use signIn directly
-  //     localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken);
-  //     window.location.href = "/";
-  //   } catch (error) {
-  //     if (error.code === 'UserNotConfirmedException') {
-  //       window.location.href = "/confirm";
-  //     } else {
-  //       setErrors(error.message);
-  //     }
-  //   }
-  //   return false;
-  // };
+  };
 
   const email_onchange = (event) => {
     setEmail(event.target.value);
@@ -75,7 +67,8 @@ export default function SigninPage() {
               <input
                 type="text"
                 value={email}
-                onChange={email_onchange} 
+                onChange={email_onchange}
+                required
               />
             </div>
             <div className='field text_field password'>
@@ -83,7 +76,8 @@ export default function SigninPage() {
               <input
                 type="password"
                 value={password}
-                onChange={password_onchange} 
+                onChange={password_onchange}
+                required
               />
             </div>
           </div>

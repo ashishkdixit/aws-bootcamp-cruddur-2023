@@ -32,35 +32,51 @@ export default function HomeFeedPage() {
     }
   };
 
-  // Authentication check function
   // const checkAuth = async () => {
   //   try {
-  //     const cognitoUser = await getCurrentUser({ bypassCache: false });
-  //     const {tokens: session} = await fetchAuthSession();
+  //     // Retrieve user details
+  //     const user = await getCurrentUser({ bypassCache: false });
+
+  //     // Verify session validity
+  //     await fetchAuthSession();
+      
+  //     // Check if session is valid by calling fetchAuthSession()
+  //     // const session = await fetchAuthSession();
+  //     // localStorage.setItem("access_token", session.tokens.accessToken);
+  
+  //     // If successful, set user state
   //     setUser({
-  //       display_name: cognitoUser.attributes.name,
-  //       handle: cognitoUser.attributes.preferred_username,
+  //       display_name: user.attributes.name,
+  //       handle: user.attributes.preferred_username,
   //     });
   //   } catch (err) {
   //     console.log("Error checking authentication:", err);
   //   }
   // };
   const checkAuth = async () => {
-    getCurrentUser({
-      bypassCache: false 
-    })
-    .then((user) => {
-      console.log('user',user);
-      return getCurrentUser()
-    }).then((cognito_user) => {
-        setUser({
-          display_name: cognito_user.attributes.name,
-          handle: cognito_user.attributes.preferred_username
-        })
-    })
-    .catch((err) => console.log(err));
+    try {
+      // Retrieve user details, ensuring the session is valid before setting user data
+      const user = await getCurrentUser({ bypassCache: false });
+  
+      // Check for a valid session; this will error if the session is invalid
+      const session = await fetchAuthSession();
+      const accessToken = session.getAccessToken().getJwtToken();
+      console.log(accessToken)
+      localStorage.setItem("access_token", accessToken);
+  
+      // If session is valid, set user state
+      setUser({
+        display_name: user.attributes.name,
+        handle: user.attributes.preferred_username,
+      });
+  
+      console.log("Session is valid. User authenticated.");
+    } catch (err) {
+      console.log("Error checking authentication:", err.message);
+    }
   };
   
+ 
 
   React.useEffect(() => {
     loadData();
