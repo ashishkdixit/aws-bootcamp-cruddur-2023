@@ -29,13 +29,13 @@ export default function SigninPage() {
       console.log("Session Object:", session);
 
       // Ensure session is valid
-      if (!session || !session.getAccessToken) {
+      if (!session || !session.tokens || !session.tokens.accessToken) {
         throw new Error("Invalid session.");
       }
 
       // Get access token
       // const accessToken = session.getAccessToken().getJwtToken();
-      const accessToken = session.tokens.accessToken();
+      const accessToken = session.tokens.accessToken.toString();
       console.log("Access Token:", accessToken);
 
       // Store token locally
