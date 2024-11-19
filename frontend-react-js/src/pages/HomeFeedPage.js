@@ -7,7 +7,7 @@ import ActivityForm from '../components/ActivityForm';
 import ReplyForm from '../components/ReplyForm';
 
 // Import specific functions from Amplify Auth module
-import { fetchAuthSession, getCurrentUser } from '@aws-amplify/auth';
+import { fetchAuthSession, getCurrentUser,fetchUserAttributes } from '@aws-amplify/auth';
 
 export default function HomeFeedPage() {
   const [activities, setActivities] = React.useState([]);
@@ -40,34 +40,31 @@ export default function HomeFeedPage() {
   const checkAuth = async () => {
     try {
       // Retrieve user details
-      const user = await getCurrentUser({ bypassCache: false });
-      console.log("User details:", user);
+      const { username} = await getCurrentUser({ bypassCache: false });
+      console.log("username", username);
+
+      const user = await fetchUserAttributes({ bypassCache: false });
+ 
 
       // Fetch session
       const session = await fetchAuthSession();
-      console.log("Session Object:", session);
-
+      
       // Ensure session is valid
-      // if (!session || !session.getAccessToken) {
-      //   throw new Error("Invalid session.");
-      // }
 
       if (!session || !session.tokens || !session.tokens.accessToken) {
         throw new Error("Invalid session.");
       }
 
       // Get access token
-      // const accessToken = session.getAccessToken().getJwtToken();
       const accessToken = session.tokens.accessToken.toString();
-      console.log("Access Token:", accessToken);
 
       // Store token locally
       localStorage.setItem("access_token", accessToken);
 
       // Set user state
       setUser({
-        display_name: user.attributes.name,
-        handle: user.attributes.preferred_username,
+        display_name: user.name,
+        handle: user.preferred_username
       });
 
       console.log("Session is valid. User authenticated.");
@@ -76,10 +73,14 @@ export default function HomeFeedPage() {
     }
   };
 
-  React.useEffect(() => {
+  React.useEffect(()=>{
+    //prevents double call
+    if (dataFetchedRef.current) return;
+    dataFetchedRef.current = true;
+
     loadData();
     checkAuth();
-  }, []);
+  }, [])
 
   return (
     <article>
