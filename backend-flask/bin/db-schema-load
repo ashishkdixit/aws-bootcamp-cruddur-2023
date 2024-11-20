@@ -1,0 +1,6 @@
+#! /usr/bin/bash
+echo "db-schema-load"
+$echo realpath ./backend_flask
+schema_path="$(realpath .)/backend-flask/db/schema.sql"
+echo $schema
+psql $CONNECTION_URL cruddur < $schema_path
