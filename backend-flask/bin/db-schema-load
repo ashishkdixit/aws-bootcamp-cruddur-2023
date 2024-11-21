@@ -2,5 +2,18 @@
 echo "db-schema-load"
 $echo realpath ./backend_flask
 schema_path="$(realpath .)/backend-flask/db/schema.sql"
-echo $schema
-psql $CONNECTION_URL cruddur < $schema_path
+echo $schema_path
+
+echo "arg: $1"
+if [ "$1" = "prod" ]; then
+  echo "Running in production mode"
+  CON_URL=$PROD_CONNECTION_URL
+else
+  echo "Running in development mode"
+  CON_URL=$CONNECTION_URL
+  echo $CON_URL
+  echo $CONNECTION_URL
+fi
+
+psql $CON_URL cruddur < $schema_path
+
