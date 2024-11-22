@@ -3,12 +3,10 @@
 CYAN='\033[1;36m'
 NO_COLOR='\033[0m'
 LABEL="db-schema-load"
-printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+printf "${CYAN}==${LABEL}${NO_COLOR}\n"
 
-echo "== db-schema-load"
-$echo realpath ./backend_flask
 schema_path="$(realpath .)/backend-flask/db/schema.sql"
-echo $schema_path
+echo "schema_path: $schema_path"
 
 echo "arg: $1"
 if [ "$1" = "prod" ]; then
@@ -17,8 +15,8 @@ if [ "$1" = "prod" ]; then
 else
   echo "Running in development mode"
   CON_URL=$CONNECTION_URL
-  echo $CON_URL
-  echo $CONNECTION_URL
+  echo "CONNECTION_URL: $CON_URL"
+  
 fi
 
 psql $CON_URL cruddur < $schema_path

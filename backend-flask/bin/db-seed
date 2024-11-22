@@ -1,15 +1,12 @@
 #! /usr/bin/bash
 
-#! /usr/bin/bash
-
 CYAN='\033[1;36m'
 NO_COLOR='\033[0m'
-LABEL="db-seed-load"
-printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+LABEL="db-seed"
+printf "${CYAN}==${LABEL}${NO_COLOR}\n"
 
-$echo realpath ./backend_flask
 seed_path="$(realpath .)/backend-flask/db/seed.sql"
-echo $seed_path
+echo "seed path:$seed_path"
 
 echo "arg: $1"
 if [ "$1" = "prod" ]; then
@@ -18,9 +15,8 @@ if [ "$1" = "prod" ]; then
 else
   echo "Running in development mode"
   CON_URL=$CONNECTION_URL
-  echo $CON_URL
-  echo $CONNECTION_URL
-fi
+  echo "CONNECTION_URL: $CON_URL"
+ fi
 
 psql $CON_URL cruddur < $seed_path
 
