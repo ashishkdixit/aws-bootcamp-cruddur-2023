@@ -5,10 +5,10 @@ DROP TABLE if EXISTS public.activities;
 
 CREATE TABLE public.users (
   uuid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  display_name text,
-  handle text,
-  email text,
-  cognito_user_id text,
+  display_name text not NULL,
+  handle text not NULL,
+  email text not NULL,
+  cognito_user_id text not NULL,
   created_at TIMESTAMP default current_timestamp NOT NULL
 );
 
