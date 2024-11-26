@@ -5,6 +5,8 @@ vscode:
     
     - mtxr.sqltools-driver-pg
 
+    - vscodevim.vim
+
 
 tasks:
   - name: aws-cli
