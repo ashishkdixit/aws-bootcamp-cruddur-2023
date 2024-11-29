@@ -1,11 +1,12 @@
-
 vscode:
   extensions:
     - 42Crunch.vscode-openapi
     
     - mtxr.sqltools-driver-pg
 
-    - vscodevim.vim
+    - dunstontc.viml
+
+    - mtxr.sqltools
 
 
 tasks:
@@ -26,7 +27,7 @@ tasks:
     command: |
       cd backend-flask
       pip install -r requirements.txt
-  
+
   - name: postgres
     init: |
       curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg

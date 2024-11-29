@@ -35,7 +35,7 @@ const router = createBrowserRouter([
   { path: "/notifications", element: <NotificationsFeedPage /> },
   { path: "/@:handle", element: <UserFeedPage /> },
   { path: "/messages", element: <MessageGroupsPage /> },
-  { path: "/messages/@:handle", element: <MessageGroupPage /> },
+  { path: "/messages/:message_group_uuid", element: <MessageGroupPage /> },
   { path: "/signup", element: <SignupPage /> },
   { path: "/signin", element: <SigninPage /> },
   { path: "/confirm", element: <ConfirmationPage /> },
