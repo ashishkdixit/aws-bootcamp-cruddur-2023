@@ -65,6 +65,8 @@ class Ddb:
     items = response['Items']
     items.reverse()
     
+    print("items::", items)
+
     results = []
     for item in items:
       created_at = item['sk']['S']
