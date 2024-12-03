@@ -3,10 +3,7 @@ import React from "react";
 
 import DesktopNavigation  from '../components/DesktopNavigation';
 import MessageGroupFeed from '../components/MessageGroupFeed';
-import checkAuth from '../lib/CheckAuth'
-
-// [TODO] Authenication
-import Cookies from 'js-cookie'
+import checkAuth from '../lib/CheckAuth';
 
 export default function MessageGroupsPage() {
   const [messageGroups, setMessageGroups] = React.useState([]);
@@ -33,7 +30,6 @@ export default function MessageGroupsPage() {
       console.log(err);
     }
   };  
-
 
   React.useEffect(()=>{
     //prevents double call
