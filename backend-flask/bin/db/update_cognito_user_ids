@@ -6,7 +6,7 @@ import sys
 
 
 LABEL="update-cognito-user-ids"
-print (LABEL))
+print (LABEL)
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 parent_path = os.path.abspath(os.path.join(current_path, '..', '..'))
