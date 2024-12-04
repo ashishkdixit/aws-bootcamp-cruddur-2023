@@ -153,6 +153,7 @@ class Ddb:
         {'PutRequest': {'Item': message}}
       ]
     }
+    print (items)
 
     try:
       print('== create_message_group.try')
