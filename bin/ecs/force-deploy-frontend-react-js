@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Variables
+CLUSTER_NAME="cruddur"  
+SERVICE_NAME="frontend-react-js"   
+TASK_FAMILY="frontend-react-js"     
+
+# Retrieve the latest task definition
+LATEST_TASK_DEFINITION=$(aws ecs describe-task-definition \
+    --task-definition $TASK_FAMILY \
+    --query "taskDefinition.taskDefinitionArn" \
+    --output text)
+
+echo "Latest task definition: $LATEST_TASK_DEFINITION"
+
+# Get the desired count of the service
+DESIRED_COUNT=$(aws ecs describe-services \
+    --cluster "$CLUSTER_NAME" \
+    --services "$SERVICE_NAME" \
+    --query "services[0].desiredCount" \
+    --output text)
+
+# Check if the service is running
+if [ "$DESIRED_COUNT" -eq 0 ]; then
+    echo "Service is not running. Starting it..."
+    # Start the service with a desired count of 1 (or more as needed)
+    aws ecs update-service \
+        --cluster "$CLUSTER_NAME" \
+        --service "$SERVICE_NAME" \
+        --task-definition "$LATEST_TASK_DEFINITION" \
+        --desired-count 1
+exit 0
+else
+    echo "Service is running, updating with the latest task definition and force new deployment"
+fi
+
+
+
+# Update the service with the latest task definition and force new deployment
+aws ecs update-service \
+    --cluster "$CLUSTER_NAME" \
+    --service "$SERVICE_NAME" \
+    --task-definition "$LATEST_TASK_DEFINITION" \
+    --force-new-deployment
+
+echo "Service has been updated and redeployed."
