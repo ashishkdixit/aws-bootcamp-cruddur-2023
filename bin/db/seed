@@ -5,7 +5,18 @@ NO_COLOR='\033[0m'
 LABEL="db-seed"
 printf "${CYAN}==${LABEL}${NO_COLOR}\n"
 
-seed_path="$(realpath .)/backend-flask/db/seed.sql"
+ABS_PATH=$(readlink -f "$0")
+DB_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $DB_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+BACKEND_FLASK_PATH=$PROJECT_PATH/backend-flask
+
+echo $ABS_PATH
+echo $DB_PATH
+echo $BIN_PATH
+echo $PROJECT_PATH
+
+seed_path="$BACKEND_FLASK_PATH/db/seed.sql"
 echo "seed path:$seed_path"
 
 echo "arg: $1"
