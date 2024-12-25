@@ -25,5 +25,6 @@ else
   
 fi
 
-# psql $CON_URL cruddur < $schema_path
+psql $CON_URL cruddur < $schema_path
+
 
