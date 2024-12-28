@@ -21,14 +21,15 @@ tasks:
       cd $THEIA_WORKSPACE_ROOT
   - name: react-js
     command: |
+      "$THEIA_WORKSPACE_ROOT/bin/frontend/generate-env"
       cd frontend-react-js
       npm i
-      source "$THEIA_WORKSPACE_ROOT/bin/frontend/generate-env"
+      
   - name: flask
     command: |
+      "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env"
       cd backend-flask
       pip install -r requirements.txt
-      source "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env"
   - name: fargate
     before: |
       curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
